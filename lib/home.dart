@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/dialog.dart';
 import 'package:todo_app/global.dart';
 import 'package:todo_app/modify.dart';
 import 'package:todo_app/storage.dart';
@@ -13,6 +14,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<ToDo> toDos = [];
+  final storage = Storage();
 
   @override
   void initState() {
@@ -21,7 +23,16 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> getStorage() async {
-    toDos = await Storage().getData();
+    var temp = await Storage().getData();
+    setState(() {
+      toDos = temp;
+    });
+  }
+
+  Future<void> delete(int index) async {
+    setState(() {
+      toDos.removeAt(index);
+    });
   }
 
   @override
@@ -52,7 +63,7 @@ class _HomeState extends State<Home> {
                           modify: (ToDo todo) {
                             setState(() {
                               toDos.add(todo);
-                              Storage().saveData(toDos);
+                              storage.saveData(toDos);
                             });
                           },
                         ),
@@ -73,22 +84,70 @@ class _HomeState extends State<Home> {
                   return Card(
                     color: SECONDARY,
                     clipBehavior: Clip.antiAlias,
-                    child: CheckboxListTile(
-                      title: Text(
-                        toDos[index].keterangan,
-                        style: TextStyle(
-                          decoration: toDos[index].isComplete
-                              ? TextDecoration.lineThrough
-                              : null,
-                        ),
-                      ),
-                      value: toDos[index].isComplete,
-                      activeColor: PURPLE,
-                      onChanged: (value) {
-                        setState(() {
-                          toDos[index].isComplete = value!;
-                        });
+                    child: Dismissible(
+                      key: UniqueKey(),
+                      confirmDismiss: (direction) async {
+                        if (direction == DismissDirection.startToEnd) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => Modify(
+                                modify: (todo) async {
+                                  toDos[index] = todo;
+                                  await storage.saveData(toDos);
+                                  setState(() {
+                                    toDos;
+                                  });
+                                },
+                                todo: toDos[index],
+                              ),
+                            ),
+                          );
+                          return false;
+                        } else {
+                          bool result =
+                              await showDeleteDialog(context) ?? false;
+                          if (result) {
+                            toDos.removeAt(index);
+
+                            await storage.saveData(toDos);
+
+                            setState(() {
+                              toDos;
+                            });
+                          }
+                          return result;
+                        }
                       },
+                      background: Container(
+                        padding: const EdgeInsets.all(12),
+                        alignment: Alignment.centerLeft,
+                        color: Colors.green,
+                        child: const Icon(Icons.edit),
+                      ),
+                      secondaryBackground: Container(
+                        padding: const EdgeInsets.all(12),
+                        alignment: Alignment.centerRight,
+                        color: Colors.red,
+                        child: const Icon(Icons.delete),
+                      ),
+                      child: CheckboxListTile(
+                        title: Text(
+                          toDos[index].keterangan,
+                          style: TextStyle(
+                            decoration: toDos[index].isComplete
+                                ? TextDecoration.lineThrough
+                                : null,
+                          ),
+                        ),
+                        value: toDos[index].isComplete,
+                        activeColor: PURPLE,
+                        onChanged: (value) {
+                          setState(() {
+                            toDos[index].isComplete = value!;
+                            storage.saveData(toDos);
+                          });
+                        },
+                      ),
                     ),
                   );
                 },
