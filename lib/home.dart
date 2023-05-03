@@ -22,6 +22,7 @@ class _HomeState extends State<Home> {
     getStorage();
   }
 
+  //todo: Menyimpan data ke database lokal
   Future<void> getStorage() async {
     var temp = await Storage().getData();
     setState(() {
@@ -29,18 +30,12 @@ class _HomeState extends State<Home> {
     });
   }
 
-  Future<void> delete(int index) async {
-    setState(() {
-      toDos.removeAt(index);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: PRIMARY,
-      body: SafeArea(
-        child: Padding(
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: PRIMARY,
+        body: Padding(
           padding: const EdgeInsets.fromLTRB(10, 14, 10, 0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,10 +51,12 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
+                  //todo: Tombol untuk membuka tampilan untuk menambah data
                   IconButton(
                     onPressed: () => Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => Modify(
+                          //todo: Kode untuk menambahkan data ke list
                           modify: (ToDo todo) {
                             setState(() {
                               toDos.add(todo);
@@ -94,9 +91,7 @@ class _HomeState extends State<Home> {
                                 modify: (todo) async {
                                   toDos[index] = todo;
                                   await storage.saveData(toDos);
-                                  setState(() {
-                                    toDos;
-                                  });
+                                  setState(() => toDos);
                                 },
                                 todo: toDos[index],
                               ),
@@ -104,16 +99,13 @@ class _HomeState extends State<Home> {
                           );
                           return false;
                         } else {
-                          bool result =
-                              await showDeleteDialog(context) ?? false;
-                          if (result) {
+                          bool? result = await showDeleteDialog(context);
+                          if (result ?? false) {
                             toDos.removeAt(index);
 
                             await storage.saveData(toDos);
 
-                            setState(() {
-                              toDos;
-                            });
+                            setState(() => toDos);
                           }
                           return result;
                         }
@@ -132,7 +124,7 @@ class _HomeState extends State<Home> {
                       ),
                       child: CheckboxListTile(
                         title: Text(
-                          toDos[index].keterangan,
+                          toDos[index].kegiatan,
                           style: TextStyle(
                             decoration: toDos[index].isComplete
                                 ? TextDecoration.lineThrough
