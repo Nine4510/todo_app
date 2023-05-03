@@ -131,6 +131,7 @@ class _HomeState extends State<Home> {
                                 : null,
                           ),
                         ),
+                        subtitle: Text(toDos[index].keterangan),
                         value: toDos[index].isComplete,
                         activeColor: PURPLE,
                         onChanged: (value) {
