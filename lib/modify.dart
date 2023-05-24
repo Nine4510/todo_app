@@ -28,7 +28,7 @@ class Modify extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(6, 10, 6, 0),
                   child: Form(
                     key: _formKey,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    autovalidateMode: AutovalidateMode.always,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -92,8 +92,10 @@ class Modify extends StatelessWidget {
                           alignment: Alignment.centerRight,
                           child: ElevatedButton.icon(
                             onPressed: () {
-                              modify(todo);
-                              Navigator.of(context).pop();
+                              if (_formKey.currentState?.validate() ?? false) {
+                                modify(todo);
+                                Navigator.of(context).pop();
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: RED,
