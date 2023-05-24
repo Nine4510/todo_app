@@ -22,4 +22,11 @@ class ToDo {
       json['isComplete'],
     );
   }
+
+  static List<ToDo> get example => [
+        ToDo("Test 1", "Lorem Ipsum dolor sit amet", false),
+        ToDo("Test 2", "Lorem Ipsum dolor sit amet", false),
+        ToDo("Test 3", "Lorem Ipsum dolor sit amet", true),
+        ToDo("Test 4", "Lorem Ipsum dolor sit amet", true),
+      ];
 }
