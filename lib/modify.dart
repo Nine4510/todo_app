@@ -15,14 +15,14 @@ class Modify extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: PRIMARY,
-      child: Stack(
-        children: [
-          Scaffold(
-            backgroundColor: Colors.transparent,
-            body: SafeArea(
-              child: Padding(
+    return SafeArea(
+      child: Container(
+        color: PRIMARY,
+        child: Stack(
+          children: [
+            Scaffold(
+              backgroundColor: Colors.transparent,
+              body: Padding(
                 padding: const EdgeInsets.all(8),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(6, 10, 6, 0),
@@ -61,6 +61,12 @@ class Modify extends StatelessWidget {
                             fillColor: Colors.white.withOpacity(0.8),
                           ),
                           onChanged: (newValue) => todo.kegiatan = newValue,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Kegiatan tidak boleh kosong";
+                            }
+                            return null;
+                          },
                         ),
                         const SizedBox(height: 8),
                         TextFormField(
@@ -74,6 +80,12 @@ class Modify extends StatelessWidget {
                             fillColor: Colors.white.withOpacity(0.8),
                           ),
                           onChanged: (newValue) => todo.keterangan = newValue,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return "Keterangan tidak boleh kosong";
+                            }
+                            return null;
+                          },
                         ),
                         const SizedBox(height: 12),
                         Align(
@@ -98,18 +110,18 @@ class Modify extends StatelessWidget {
                 ),
               ),
             ),
-          ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Image.asset(
-              'shared/background.png',
-              height: 300,
-              fit: BoxFit.fitHeight,
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Image.asset(
+                'shared/background.png',
+                height: 300,
+                fit: BoxFit.fitHeight,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
