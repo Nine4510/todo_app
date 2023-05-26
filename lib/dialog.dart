@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//dialog dengan kembalian boolean
 Future<bool?> showDeleteDialog(BuildContext context) async {
   return await showDialog<bool>(
     context: context,

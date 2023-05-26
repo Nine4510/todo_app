@@ -10,7 +10,10 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //merupakan widget dasar dari aplikasi.
+    //pengaturan tema dan route navigasi dapat dilakukan disini.
     return const MaterialApp(
+      //berfungsi untuk menghilangkan banner debug di ujung aplikasi.
       debugShowCheckedModeBanner: false,
       home: Home(),
     );

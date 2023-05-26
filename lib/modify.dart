@@ -11,6 +11,8 @@ class Modify extends StatelessWidget {
       : todo = todo ?? ToDo('', '', false),
         super(key: key);
 
+  //variabel berikut merupakan dimana validasi form disimpan. Variabel ini
+  //juga dapat digunakan untuk memanipulasi form
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -20,6 +22,7 @@ class Modify extends StatelessWidget {
         color: PRIMARY,
         child: Stack(
           children: [
+            //mengatur penempatan item di dalam stack di sudut kanan bawah stack
             Positioned(
               bottom: 0,
               left: 0,

@@ -13,16 +13,18 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  //Tempat dimana data todo disimpan.
   List<ToDo> toDos = [];
   final storage = Storage();
 
+  //initState berfungsi untuk menjalankan sebuah proses pada awal tampilan dibuat.
   @override
   void initState() {
     super.initState();
     getStorage();
   }
 
-  //todo: Menyimpan data ke database lokal
+  //Mengambil data dari shared preferences
   Future<void> getStorage() async {
     var temp = await Storage().getData();
     setState(() {
@@ -51,15 +53,16 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                   ),
-                  //todo: Tombol untuk membuka tampilan untuk menambah data
+                  //Tombol untuk membuka tampilan untuk menambah data
                   IconButton(
                     onPressed: () => Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => Modify(
-                          //todo: Kode untuk menambahkan data ke list
+                          //Kode untuk menambahkan data ke list
                           modify: (ToDo todo) {
                             setState(() {
                               toDos.add(todo);
+                              //menyimpan data ke shared preferences
                               storage.saveData(toDos);
                             });
                           },
@@ -75,15 +78,29 @@ class _HomeState extends State<Home> {
               ),
               const SizedBox(height: 8),
               ListView.builder(
+                /*
+                shrinkWrap digunakan sebagai pembatas ukuran dari list view
+                secara dinamis sesuai dengan jumlah data yang ada, jika ingin
+                membatasi ukuran dengan ukuran yang fixed dapat digunakan widget
+                SizedBox
+                */
                 shrinkWrap: true,
+                //item count wajib diisi, disini item count diambil dari jumlah item di variabel toDos
                 itemCount: toDos.length,
                 itemBuilder: (context, index) {
                   return Card(
                     color: SECONDARY,
+                    //Mengatur untuk membatasi overflow
                     clipBehavior: Clip.antiAlias,
                     child: Dismissible(
+                      //Wajib diisi, fungsi ini digunakan untuk mengisi key dengan key yang berbeda.
                       key: UniqueKey(),
+                      //Property untuk mengatur apa yang akan dilakukan oleh program pada arah swipe.
                       confirmDismiss: (direction) async {
+                        /*
+                        Wajib mengembalikan true atau false, ketika kembalian adalah false maka
+                        efek menghilangkan tampilan akan dibatalkan
+                        */
                         if (direction == DismissDirection.startToEnd) {
                           Navigator.of(context).push(
                             MaterialPageRoute(
@@ -110,12 +127,14 @@ class _HomeState extends State<Home> {
                           return result;
                         }
                       },
+                      //background ketika digeser ke kanan
                       background: Container(
                         padding: const EdgeInsets.all(12),
                         alignment: Alignment.centerLeft,
                         color: Colors.green,
                         child: const Icon(Icons.edit),
                       ),
+                      //background ketika digeser ke kiri
                       secondaryBackground: Container(
                         padding: const EdgeInsets.all(12),
                         alignment: Alignment.centerRight,
@@ -125,6 +144,7 @@ class _HomeState extends State<Home> {
                       child: CheckboxListTile(
                         title: Text(
                           toDos[index].kegiatan,
+                          //menambahkan garis pada text ketika kegiatan sudah dilakukan
                           style: TextStyle(
                             decoration: toDos[index].isComplete
                                 ? TextDecoration.lineThrough
