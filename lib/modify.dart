@@ -20,6 +20,16 @@ class Modify extends StatelessWidget {
         color: PRIMARY,
         child: Stack(
           children: [
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Image.asset(
+                'shared/background.png',
+                height: 300,
+                fit: BoxFit.fitHeight,
+              ),
+            ),
             Scaffold(
               backgroundColor: Colors.transparent,
               body: Padding(
@@ -28,7 +38,7 @@ class Modify extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(6, 10, 6, 0),
                   child: Form(
                     key: _formKey,
-                    autovalidateMode: AutovalidateMode.always,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -110,16 +120,6 @@ class Modify extends StatelessWidget {
                     ),
                   ),
                 ),
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Image.asset(
-                'shared/background.png',
-                height: 300,
-                fit: BoxFit.fitHeight,
               ),
             ),
           ],
